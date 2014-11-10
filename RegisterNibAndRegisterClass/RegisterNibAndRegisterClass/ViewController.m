@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "CodedCell.h"
 
 @interface ViewController ()
 
@@ -20,7 +21,11 @@
     
     // 注册一个xib文件
     // 如果tableView通过@"RegisterCell"这个标识去缓存池中没有取到可循环利用的Cell, 就会加载RegisterCell.xib文件来创建Cell
-    [self.tableView registerNib:[UINib nibWithNibName:@"RegisterCell" bundle:nil] forCellReuseIdentifier:@"RegisterCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"RegisterCell" bundle:nil] forCellReuseIdentifier:@"XibCell"];
+    
+    
+//    [self.tableView registerClass:[CodedCell class] forCellReuseIdentifier:@"CodedCell"];
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -28,14 +33,28 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *ID = @"RegisterCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    
+
+//    ****************************************************************************
+//    Using RegisterCell.xib
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"XibCell"];
 //    if (cell == nil) {
 //        cell = [[NSBundle mainBundle] loadNibNamed:@"RegisterCell" owner:nil options:nil][0];
 //    }
+//    ****************************************************************************
     
+//    ****************************************************************************
+//    Using code
+//    CodedCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CodedCell"];
+//    if (cell == nil) {
+//        cell = [[CodedCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CodedCell"];
+//    }
+//    ****************************************************************************
+    
+    // 验证cell中是否只有一个contentView 并验证contentView中有没有Label和Button
+    NSLog(@"%@", cell.subviews);
+    NSLog(@"%@", cell.contentView.subviews);
+    
+    // 验证循环利用
     NSLog(@"%p *** %d", cell, indexPath.row);
     return cell;
 }
